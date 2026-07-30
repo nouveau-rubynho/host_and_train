@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.DS_Store
+
+# models, adapters, data artifacts
+models/
+adapters/
+outputs/
+checkpoints/
+*.gguf
+*.safetensors
