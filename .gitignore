@@ -5,6 +5,10 @@ venv/
 .env
 .DS_Store
 
+# zapisi uporabe
+logs/*.jsonl
+logs/*.log
+
 # models, adapters, data artifacts
 models/
 adapters/

@@ -1,0 +1,23 @@
+# Osnovno
+transformers>=4.51.0
+tokenizers>=0.21.0
+accelerate>=1.4.0
+peft>=0.14.0
+datasets>=3.2.0
+safetensors>=0.5.0
+pyyaml>=6.0
+sentencepiece>=0.2.0
+
+# Strežnik
+fastapi>=0.115.0
+uvicorn>=0.34.0
+pydantic>=2.10.0
+
+# torch: NE nameščaj od tu. Glej README - namestitev je odvisna od strojne opreme.
+#   NVIDIA Blackwell (RTX 50xx):
+#     pip install torch --index-url https://download.pytorch.org/whl/cu128
+#   Apple Silicon:
+#     pip install torch
+#
+# bitsandbytes: SAMO NVIDIA, potrebno za precision: 4bit
+#   pip install "bitsandbytes>=0.45.0"

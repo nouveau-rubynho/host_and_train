@@ -1,0 +1,133 @@
+{
+  "_comment": "Register orodij. Dodaj napravo tukaj - kode ni treba spreminjati. Imena so v obliki <skupina>.<naprava>.<akcija>. Polje 'group' omogoča, da strežniku podaš samo relevantno podmnožico orodij (glej README, 'Proračun orodij').",
+
+  "tools": [
+    {
+      "group": "pc",
+      "type": "function",
+      "function": {
+        "name": "pc.system_status",
+        "description": "Vrne stanje glavnega računalnika: obremenitev CPU, poraba RAM, prostor na disku, temperatura.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "detailed": {
+              "type": "boolean",
+              "description": "Če je true, vrne tudi seznam procesov z največjo porabo."
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "group": "pc",
+      "type": "function",
+      "function": {
+        "name": "pc.run_command",
+        "description": "Izvede vnaprej odobren ukaz na glavnem računalniku. Dovoljeni so samo ukazi iz belega seznama.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "string",
+              "description": "Ime odobrenega ukaza, npr. 'backup_now' ali 'restart_service'."
+            },
+            "args": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Argumenti ukaza."
+            }
+          },
+          "required": ["command"]
+        }
+      }
+    },
+    {
+      "group": "rpi",
+      "type": "function",
+      "function": {
+        "name": "rpi.list_hosts",
+        "description": "Vrne seznam vseh registriranih Raspberry Pi naprav in njihovo stanje (online/offline).",
+        "parameters": { "type": "object", "properties": {}, "required": [] }
+      }
+    },
+    {
+      "group": "rpi",
+      "type": "function",
+      "function": {
+        "name": "rpi.gpio_set",
+        "description": "Nastavi stanje GPIO pina na določeni Raspberry Pi napravi.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "Ime naprave, npr. 'garaza' ali 'klet'. Obvezno - nikoli ne ugibaj."
+            },
+            "pin": { "type": "integer", "description": "Številka GPIO pina (BCM oštevilčenje)." },
+            "state": { "type": "string", "enum": ["high", "low"], "description": "Želeno stanje pina." }
+          },
+          "required": ["host", "pin", "state"]
+        }
+      }
+    },
+    {
+      "group": "rpi",
+      "type": "function",
+      "function": {
+        "name": "rpi.read_sensor",
+        "description": "Prebere vrednost senzorja na določeni Raspberry Pi napravi.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": { "type": "string", "description": "Ime naprave. Obvezno." },
+            "sensor": {
+              "type": "string",
+              "enum": ["temperature", "humidity", "motion", "door"],
+              "description": "Vrsta senzorja."
+            }
+          },
+          "required": ["host", "sensor"]
+        }
+      }
+    },
+    {
+      "group": "monitor",
+      "type": "function",
+      "function": {
+        "name": "monitor.get_alerts",
+        "description": "Vrne aktivna opozorila iz nadzornega sistema Silent Guardian.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "severity": {
+              "type": "string",
+              "enum": ["info", "warning", "critical"],
+              "description": "Najnižja resnost, ki naj se vrne."
+            },
+            "since_minutes": { "type": "integer", "description": "Časovno okno v minutah." }
+          },
+          "required": []
+        }
+      }
+    },
+
+    {
+      "group": "dog",
+      "_status": "PLACEHOLDER - naprava še ne obstaja. Shema je primer, kako dodaš novo skupino naprav.",
+      "type": "function",
+      "function": {
+        "name": "dog.navigate_to",
+        "description": "Pošlje robotskega psa na določeno lokacijo. NI IMPLEMENTIRANO.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "waypoint": { "type": "string", "description": "Ime shranjene lokacije, npr. 'vhod'." }
+          },
+          "required": ["waypoint"]
+        }
+      }
+    }
+  ]
+}

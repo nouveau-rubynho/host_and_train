@@ -1,0 +1,73 @@
+# ---------------------------------------------------------------------------
+# Osrednja konfiguracija. Vse skripte berejo iz te datoteke.
+# Spremeni tukaj, ne v kodi.
+# ---------------------------------------------------------------------------
+
+model:
+  # Model za učenje in gostovanje (HuggingFace ID ali lokalna pot).
+  #   mistralai/Ministral-3-3B-Instruct-2512   <- priporočeno za učenje
+  #   mistralai/Ministral-3-8B-Instruct-2512   <- za gostovanje, če je dovolj VRAM
+  #
+  # Opomba: privzeti repozitoriji so v FP8. Brez GPU se samodejno pretvorijo v
+  # bf16. Za QLoRA (precision: 4bit) na NVIDIA raje vzemi različico -BF16,
+  # npr. mistralai/Ministral-3-8B-Instruct-2512-BF16 - kvantizacija iz FP8 v
+  # 4bit je nepotreben ovinek.
+  id: mistralai/Ministral-3-3B-Instruct-2512
+
+  # auto | cuda | mps | cpu
+  device: auto
+
+  # Natančnost osnovnega modela: bf16 | fp16 | 4bit
+  #   4bit = QLoRA. Deluje SAMO na NVIDIA (bitsandbytes).
+  #   bf16 = polna natančnost adapterja. Uporabi na Apple Silicon (mps).
+  precision: bf16
+
+  # Naloži adapter poleg osnovnega modela (pot do izhoda učenja) ali null.
+  adapter: null
+
+# ---------------------------------------------------------------------------
+data:
+  seed_file: data/seed.jsonl
+  tool_registry: tools/registry.json
+
+  # Primeri, daljši od tega, se zavržejo (ne obrežejo) - obrezan tool-call
+  # je pokvarjen učni primer.
+  max_seq_len: 2048
+
+  # Delež primerov za validacijo (0 = brez).
+  eval_split: 0.0
+
+# ---------------------------------------------------------------------------
+train:
+  output_dir: adapters/silent-guardian-v1
+
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+
+  epochs: 8                     # majhna množica -> več epoh
+  batch_size: 1
+  grad_accum: 4
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.1
+  gradient_checkpointing: true
+  logging_steps: 1
+  save_strategy: epoch
+  seed: 42
+
+# ---------------------------------------------------------------------------
+serve:
+  host: 127.0.0.1
+  port: 8000
+  max_new_tokens: 512
+  temperature: 0.2
+
+  # Vsak pogovor se zapiše v isti shemi, kot jo bere trenažer.
+  # To je vir bodočih učnih podatkov.
+  log_traces: true
+  trace_file: logs/traces.jsonl
+
+# ---------------------------------------------------------------------------
+vision:
+  # Slikovni vhod. Trenutno NI implementiran - glej README, razdelek "Slike".
+  enabled: false
